@@ -28,7 +28,11 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+<<<<<<< HEAD
 router.delete('/:id', async (req, res, next) => {
+=======
+router.delete("/:id", async (req, res, next) => {
+>>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
   try {
     let user = await User.findById(req.params.id);
     let pouches = await Pouch.find()

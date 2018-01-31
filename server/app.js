@@ -11,7 +11,12 @@ mongoose.Promise = bluebird;
 // ----------------------------------------
 // Model Schemas
 // ----------------------------------------
+<<<<<<< HEAD
 const User = require('./models');
+=======
+
+const User = require("./models");
+>>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
 
 // ----------------------------------------
 // ENV
@@ -87,6 +92,7 @@ app.use(morganToolkit());
 // Passport
 // ----------------------------------------
 
+<<<<<<< HEAD
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 app.use(passport.initialize());
@@ -95,15 +101,32 @@ app.use(passport.initialize());
 // Routes
 // Local Strategy
 // ----------------------------------------
+=======
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+app.use(passport.initialize());
+
+// ----------------------------------------
+// Local Strategy
+// ----------------------------------------
+
+>>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
 passport.use(
   new LocalStrategy((username, password, done) => {
     User.findOne({ username }, (err, user) => {
       if (err) return done(err);
       if (!user.validPassword(password)) {
+<<<<<<< HEAD
         return done(null, false, { message: 'Invalid Password!' });
       }
       if (!user) {
         return done(null, false, { message: 'Invalid Username!' });
+=======
+        return done(null, false, { message: "Invalid Password!" });
+      }
+      if (!user) {
+        return done(null, false, { message: "Invalid Username!" });
+>>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
       }
       return done(null, user);
     });
@@ -127,17 +150,26 @@ passport.deserializeUser((id, done) => {
 const loggedInOnly = (req, res, next) => {
   return req.session.passport && req.session.passport.user
     ? next()
+<<<<<<< HEAD
     : res.json({ message: 'Logged In Only' });
 };
 
 const loggedOutOnly = (req, res, next) => {
   return !req.user ? next() : res.json({ message: 'Logged Out Only' });
+=======
+    : res.json({ message: "Logged In Only" });
+};
+
+const loggedOutOnly = (req, res, next) => {
+  return !req.user ? next() : res.json({ message: "Logged Out Only" });
+>>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
 };
 
 // ----------------------------------------
 // Routes
 // ----------------------------------------
 
+<<<<<<< HEAD
 const { users, pouches, items, login, logout, register } = require('./routers');
 
 app.use('/users', loggedInOnly, users);
@@ -150,6 +182,20 @@ app.use('/register', loggedOutOnly, register);
 let currentUser;
 
 app.get('/', loggedInOnly, async (req, res, next) => {
+=======
+const { users, pouches, items, login, logout, register } = require("./routers");
+
+app.use("/users", loggedInOnly, users);
+app.use("/pouches", loggedInOnly, pouches);
+app.use("/items", loggedInOnly, items);
+app.use("/login", loggedOutOnly, login);
+app.use("/logout", loggedInOnly, logout);
+app.use("/register", loggedOutOnly, register);
+
+let currentUser;
+
+app.get("/", loggedInOnly, async (req, res, next) => {
+>>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
   try {
     currentUser = await User.findById(req.session.passport.user);
     res.json(currentUser);
