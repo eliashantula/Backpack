@@ -28,7 +28,16 @@ const LocalStrategy = require("passport-local").Strategy;
 // Routes for /login
 // ----------------------------------------
 
+<<<<<<< HEAD
+router.post('/', passport.authenticate('local'), function(req, res) {
+  console.log('callback called');
+  // If this function gets called, authentication was successful.
+  // `req.user` contains the authenticated user.
+  return res.json(req.user);
+});
+=======
 router.post(
+<<<<<<< HEAD
 <<<<<<< HEAD
   '/',
   passport.authenticate('local', (req, res, next) => {
@@ -36,6 +45,10 @@ router.post(
   "/",
   passport.authenticate("local", (req, res, next) => {
 >>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
+=======
+  "/",
+  passport.authenticate("local", (req, res, next) => {
+>>>>>>> dev
     try {
       res.json(req.user);
     } catch (e) {
@@ -43,5 +56,6 @@ router.post(
     }
   })
 );
+>>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
 
 module.exports = router;

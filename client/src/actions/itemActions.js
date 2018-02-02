@@ -1,4 +1,5 @@
-import setCurrentPouch from "./pouchActions";
+import { setCurrentPouch } from "./pouchActions";
+import { getUser } from "./userActions";
 
 export const NEW_ITEM_REQUEST = "NEW_ITEM_REQUEST";
 export const NEW_ITEM_SUCCESS = "NEW_ITEM_SUCCESS";
@@ -15,7 +16,7 @@ export const GET_ITEM_REQUEST = "GET_ITEM_REQUEST";
 let server =
   process.env.NODE_ENV === "production"
     ? "https://app-Name.herokuapp.com"
-    : "http://localhost:3001";
+    : "http://localhost:3000";
 
 export function newItemSuccess(data) {
   return {
@@ -38,7 +39,6 @@ export function newItemRequest() {
 }
 
 export function newItem(data) {
-  let item = data.item;
   let pouchId = data.pouchId;
   var myHeaders = new Headers();
 
@@ -46,12 +46,13 @@ export function newItem(data) {
   return dispatch => {
     dispatch(newItemRequest());
 
-    fetch(`${server}/items/`, {
+    fetch(`${server}/items`, {
       method: "POST",
       headers: myHeaders,
       mode: "cors",
       cache: "default",
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      credentials: "same-origin"
     })
       .then(response => {
         if (!response.ok) {
@@ -62,7 +63,11 @@ export function newItem(data) {
       })
       .then(json => {
         dispatch(newItemSuccess(json));
-        dispatch(setCurrentPouch({ pouchId }));
+        if (pouchId) {
+          dispatch(setCurrentPouch({ _id: pouchId }));
+        } else {
+          dispatch(getUser());
+        }
       })
       .catch(error => {
         dispatch(newItemFailure(error));
@@ -77,7 +82,8 @@ export function deleteItem(data) {
     fetch(`${server}/items/${itemId}`, {
       method: "DELETE",
       body: JSON.stringify({ pouchId }),
-      mode: "cors"
+      mode: "cors",
+      credentials: "same-origin"
     })
       .then(response => {
         if (!response.ok) {
@@ -142,7 +148,8 @@ export function getItem(data) {
     dispatch(getItemRequest());
 
     fetch(`${server}/items/${itemId}`, {
-      mode: "cors"
+      mode: "cors",
+      credentials: "same-origin"
     })
       .then(response => {
         if (!response.ok) {

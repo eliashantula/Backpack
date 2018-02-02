@@ -1,4 +1,4 @@
-import getUserPouches from "./userActions";
+import { getUserPouches } from "./userActions";
 
 export const GET_POUCH_REQUEST = "GET_POUCH_REQUEST";
 export const GET_POUCH_SUCCESS = "GET_POUCH_SUCCESS";
@@ -23,7 +23,7 @@ export const DELETE_POUCH_FAILURE = "DELETE_POUCH_FAILURE";
 let server =
   process.env.NODE_ENV === "production"
     ? "https://app-Name.herokuapp.com"
-    : "http://localhost:3001";
+    : "http://localhost:3000";
 
 export function getPouchSuccess(data) {
   return {
@@ -49,7 +49,7 @@ export function getPouch(id) {
   return dispatch => {
     dispatch(getPouchRequest());
 
-    fetch(`/pouches/${id}`, { mode: "cors" })
+    fetch(`/pouches/${id}`, { mode: "cors", credentials: "same-origin" })
       .then(response => {
         if (!response.ok) {
           throw new Error(`${response.status} ${response.statusText}`);
@@ -78,7 +78,8 @@ export function newPouch(data) {
       headers: myHeaders,
       mode: "cors",
       cache: "default",
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      credentials: "same-origin"
     })
       .then(response => {
         if (!response.ok) {
@@ -89,7 +90,7 @@ export function newPouch(data) {
       })
       .then(json => {
         dispatch(newPouchSuccess(json));
-        dispatch(getUserPouches());
+        dispatch(getUserPouches({ _id: json.ownerId }));
       })
       .catch(error => {
         dispatch(newPouchFailure(error));
@@ -150,7 +151,8 @@ export function updatePouch(data) {
       headers: myHeaders,
       mode: "cors",
       cache: "default",
-      body: JSON.stringify({ name, userId, itemIds })
+      body: JSON.stringify({ name, userId, itemIds }),
+      credentials: "same-origin"
     })
       .then(response => {
         if (!response.ok) {
@@ -171,12 +173,13 @@ export function updatePouch(data) {
 }
 
 export function setCurrentPouch(data) {
-  let pouchId = data.pouchId;
+  let pouchId = data._id;
   return dispatch => {
     dispatch(setCurrentPouchRequest());
 
     fetch(`${server}/items/list/${pouchId}`, {
-      mode: "cors"
+      mode: "cors",
+      credentials: "same-origin"
     })
       .then(response => {
         if (!response.ok) {
@@ -224,7 +227,8 @@ export function deletePouch(data) {
 
     fetch(`${server}/pouches/${id}`, {
       method: "DELETE",
-      mode: "cors"
+      mode: "cors",
+      credentials: "same-origin"
     })
       .then(response => {
         if (!response.ok) {
@@ -235,7 +239,7 @@ export function deletePouch(data) {
       })
       .then(json => {
         dispatch(deletePouchSuccess(json));
-        dispatch(getUserPouches());
+        dispatch(getUserPouches({ _id: json.ownerId }));
       })
       .catch(error => {
         dispatch(deletePouchFailure(error));

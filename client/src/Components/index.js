@@ -4,6 +4,20 @@ import Login from "./Login";
 import SignUp from "./SignUp";
 import Learn from "./Learn";
 import Welcome from "./Welcome";
-//import Dashboard from "./Dashboard";
+import Dashboard from "./Dashboard";
+import Logout from "./Logout";
+import AddPouch from "./AddPouch";
 
-export { ErrorMessage, SuccessMessage, Login, SignUp, Learn, Welcome };
+//state
+
+export {
+  ErrorMessage,
+  SuccessMessage,
+  Login,
+  SignUp,
+  Learn,
+  Welcome,
+  Dashboard,
+  Logout,
+  AddPouch
+};
