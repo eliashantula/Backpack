@@ -14,12 +14,18 @@ let mongoose = require("mongoose");
 var models = require("./../models");
 var User = mongoose.model("User");
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 var Pouch = mongoose.model("Pouch");
 =======
 >>>>>>> dev
 >>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
+=======
+
+var Pouch = mongoose.model("Pouch");
+
+>>>>>>> 736c08f3d6851a4b1b0aaea61b74d49cbac90023
 
 // ----------------------------------------
 // Routes for /register
@@ -35,18 +41,16 @@ router.post("/", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
 >>>>>>> dev
   try {
-<<<<<<< HEAD
+
     let { username, email, password } = req.body;
-=======
-    let { fname, lname, username, email, password } = req.body;
->>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
+
     let user = await new User({
       username,
       email,
       password,
       pouches: []
     });
-<<<<<<< HEAD
+
 
     let unsortedItems = await new Pouch({
       name: "Unsorted Items",
@@ -58,9 +62,7 @@ router.post("/", async (req, res, next) => {
     user.pouches.push(unsortedItems);
     user = await user.save();
 
-=======
-    user = await User.save();
->>>>>>> 41e72215a78b7823f6cda22fa4370ba9be82dbe7
+
     if (!user) {
       res.send(500);
     }
