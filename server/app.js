@@ -12,12 +12,8 @@ const mongo = require('./mongo')();
 // ----------------------------------------
 // Model Schemas
 // ----------------------------------------
-<<<<<<< HEAD
-const { User } = require("./models");
-=======
 
 const { User } = require('./models');
->>>>>>> 92135afdc63149b82a0190b7bd563aaf9f699fd0
 
 // ----------------------------------------
 // ENV
@@ -105,14 +101,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ----------------------------------------
-<<<<<<< HEAD
-// Routes
-// Local Strategy
-// ----------------------------------------
-
-// ----------------------------------------
-=======
->>>>>>> 92135afdc63149b82a0190b7bd563aaf9f699fd0
 // login/logout Middlewares
 // ----------------------------------------
 
@@ -132,9 +120,6 @@ const loggedOutOnly = (req, res, next) => {
 
 const { users, pouches, items, login, logout, register } = require('./routers');
 
-<<<<<<< HEAD
-app.get("/currentUser", loggedInOnly, async (req, res, next) => {
-=======
 app.use('/users', loggedInOnly, users);
 app.use('/pouches', loggedInOnly, pouches);
 app.use('/items', loggedInOnly, items);
@@ -143,7 +128,6 @@ app.use('/logout', loggedInOnly, logout);
 app.use('/register', loggedOutOnly, register);
 
 app.get('/currentUser', loggedInOnly, async (req, res, next) => {
->>>>>>> 92135afdc63149b82a0190b7bd563aaf9f699fd0
   try {
     let currentUser = await User.findById(req.session.passport.user);
     res.json(currentUser);
@@ -152,8 +136,12 @@ app.get('/currentUser', loggedInOnly, async (req, res, next) => {
   }
 });
 
-app.get('/', (req, res, next) => {
-  res.sendFile('/client/build/index.html', { root: '../' });
+// app.get('/', (req, res, next) => {
+//   res.sendFile('/client/build/index.html', { root: './' });
+// });
+
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
 // ----------------------------------------

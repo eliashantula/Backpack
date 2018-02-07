@@ -1,3 +1,5 @@
+/*global chrome*/
+
 import React, { PureComponent } from "react";
 
 import Header from "./Header";
@@ -21,6 +23,7 @@ class Welcome extends PureComponent {
 
     this.toggleLogin = this.toggleLogin.bind(this);
     this.toggleSignUp = this.toggleSignUp.bind(this);
+
     //this.create = this.create.bind(this);
   }
 
@@ -73,6 +76,7 @@ class Welcome extends PureComponent {
                     >
                       Log In
                     </Button>
+                    
                   </Col>
                 </Row>
                 <Row>

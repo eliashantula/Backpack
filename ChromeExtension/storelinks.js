@@ -9,10 +9,10 @@ var statusDisplay = null;
 
 // POST the data to the server using XMLHttpRequest
 function addBookmark() {
-  // Cancel the form submit
+ console.log("here")
   event.preventDefault();
 
-  var postUrl = "http://localhost:3001/items";
+  var postUrl = "https://appbackpack.herokuapp.com/items";
 
   // Set up an asynchronous AJAX POST request
   var xhr = new XMLHttpRequest();
