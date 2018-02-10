@@ -1,23 +1,19 @@
-import { connect } from "react-redux";
-//import { bindActionCreators } from "redux";
-
-import { Welcome } from "../Components";
-//import { getBoards, createBoard } from "../actions";
+import { connect } from 'react-redux';
+import { Welcome } from '../Components';
+import { clearError } from '../actions/userActions';
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    error: state.error
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    // getBoards: user => {
-    //   dispatch(getBoards(user));
-    // },
-    // createBoard: user => {
-    //   dispatch(createBoard(user.id));
-    // }
+    clearError: () => {
+      dispatch(clearError());
+    }
   };
 };
 

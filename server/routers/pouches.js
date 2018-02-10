@@ -44,7 +44,6 @@ router.post("/", async (req, res, next) => {
 });
 
 router.put("/:id", async (req, res, next) => {
-  console.log("HERE I AM");
   try {
     let pouch = await Pouch.findById(req.params.id);
     pouch.name = req.body.name;

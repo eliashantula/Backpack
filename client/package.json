@@ -5,10 +5,13 @@
   "proxy": "http://localhost:3001",
   "dependencies": {
     "bootstrap": "^4.0.0",
+    "enzyme": "^3.3.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-drag-and-drop": "^2.4.0",
+    "react-facebook": "^4.2.1",
     "react-facebook-login": "^4.0.0",
+    "react-facebook-login-component": "^0.9.1",
     "react-google-login": "^3.0.4",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
@@ -24,5 +27,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "enzyme-adapter-react-16": "^1.1.1"
   }
 }

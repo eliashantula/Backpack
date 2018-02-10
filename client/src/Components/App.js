@@ -6,7 +6,8 @@ import "bootstrap/dist/css/bootstrap.css";
 import {
   WelcomeContainer,
   LearnContainer,
-  DashboardContainer
+  DashboardContainer,
+  SettingsContainer
 } from "../Containers";
 
 import { Route, Switch, Redirect } from "react-router-dom";
@@ -25,13 +26,18 @@ class App extends PureComponent {
     if (!authenticated) {
       return <h2>Loading</h2>;
     }
-    let redirect = null;
-    if (!authorized && !unprotectRoutes.includes(this.url)) {
-      redirect = <Redirect to="/" />;
+
+    let redirect = this.props.redirect;
+    if (redirect) {
+      redirect = <Redirect to={redirect} />;
+    } else {
+      redirect = null;
     }
-    if (authorized && this.url) {
-      redirect = <Redirect to={this.url} />;
-      this.url = null;
+    if (
+      !authorized &&
+      !unprotectRoutes.includes(this.props.location.pathname)
+    ) {
+      redirect = <Redirect to="/" />;
     }
 
     return (
@@ -41,6 +47,7 @@ class App extends PureComponent {
           <Route exact path="/" component={WelcomeContainer} />
           <Route exact path="/learn" component={LearnContainer} />
           <Route exact path="/dashboard" component={DashboardContainer} />
+          <Route exact path="/settings" component={SettingsContainer} />
           <Route
             render={() => (
               <img id="not-found" src={img404} alt="404 page not found" />

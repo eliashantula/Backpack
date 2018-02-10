@@ -15,15 +15,12 @@ import ErrorMessage from "../Components/ErrorMessage";
 import SuccessMessage from "../Components/SuccessMessage";
 import ValidationErrorMessage from "./ValidationErrorMessage";
 import { getColorFromError } from "../helpers";
-import "../index.css";
 
 const SignUp = ({
   isOpen,
   toggle,
   onChangeInput,
   onSubmit,
-  fname,
-  lname,
   username,
   email,
   password,
@@ -36,28 +33,6 @@ const SignUp = ({
       <Form onSubmit={onSubmit} className="extra-padding">
         <SuccessMessage success={success} />
         <ErrorMessage errors={errors} />
-        <FormGroup color={getColorFromError(errors.fname)}>
-          <Label for="fname">First Name:</Label>
-          <Input
-            type="fname"
-            name="fname"
-            id="fname"
-            placeholder="first name"
-            onChange={onChangeInput}
-          />
-          <ValidationErrorMessage message={errors.fname} />
-        </FormGroup>
-        <FormGroup color={getColorFromError(errors.lname)}>
-          <Label for="lname">Last Name:</Label>
-          <Input
-            type="lname"
-            name="lname"
-            id="lname"
-            placeholder="last name"
-            onChange={onChangeInput}
-          />
-          <ValidationErrorMessage message={errors.lname} />
-        </FormGroup>
         <FormGroup color={getColorFromError(errors.email)}>
           <Label for="email">Email:</Label>
           <Input
@@ -93,10 +68,10 @@ const SignUp = ({
         </FormGroup>
       </Form>
       <ModalFooter>
-        <Button color="primary" onClick={onSubmit}>
+        <Button color="primary" className="button-font" onClick={onSubmit}>
           Sign Up
         </Button>{" "}
-        <Button color="secondary" onClick={toggle}>
+        <Button color="secondary" className="button-font" onClick={toggle}>
           Cancel
         </Button>
       </ModalFooter>

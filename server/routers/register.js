@@ -16,6 +16,7 @@ router.post('/', async (req, res, next) => {
       username,
       email,
       password,
+      privacy: 1,
       pouches: []
     });
 
@@ -34,8 +35,8 @@ router.post('/', async (req, res, next) => {
     }
     res.json(user);
   } catch (e) {
-    res.status(500);
-    next(e);
+    console.log('================= inside catch' + e);
+    res.status(500).send({ error: e });
   }
 });
 

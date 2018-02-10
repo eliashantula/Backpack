@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
 
 class DeleteItem extends React.Component {
   constructor(props) {
@@ -7,24 +7,24 @@ class DeleteItem extends React.Component {
     this.state = {
       modal: false
     };
-    this.toggle = this.toggle.bind(this);
   }
 
-  submit() {
-    this.toggle;
-  }
-
-  toggle() {
+  toggle = () => {
     this.setState({
       modal: !this.state.modal
     });
-  }
+  };
 
   render() {
     return (
       <div>
         <div className="other-button">
-          <Button color="danger" size="sm" onClick={this.toggle}>
+          <Button
+            color="danger"
+            size="sm"
+            className="button-font"
+            onClick={this.toggle}
+          >
             Delete Item
           </Button>
         </div>
@@ -40,6 +40,7 @@ class DeleteItem extends React.Component {
           <ModalFooter>
             <Button
               color="danger"
+              className="button-font"
               onClick={() => {
                 this.props.deleteItem({
                   id: this.props.id,
@@ -51,7 +52,11 @@ class DeleteItem extends React.Component {
             >
               Delete Item
             </Button>{" "}
-            <Button color="secondary" onClick={this.toggle}>
+            <Button
+              color="secondary"
+              className="button-font"
+              onClick={this.toggle}
+            >
               Cancel
             </Button>
           </ModalFooter>

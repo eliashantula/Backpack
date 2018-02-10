@@ -2,43 +2,30 @@
 // //The same above action should be reflected in state in react
 // //Visually, it should disappear from one pouch and appear in the other one
 
-import React, { Component } from 'react';
-import { Draggable, Droppable } from 'react-drag-and-drop';
-import { Container, Row, Col, ButtonGroup, Button } from 'reactstrap';
-import AddPouchContainer from '../Containers/AddPouchContainer';
-import DeleteItemContainer from '../Containers/DeleteItemContainer';
-import DeletePouchContainer from '../Containers/DeletePouchContainer';
-import AddItemContainer from '../Containers/AddItemContainer';
-import RenamePouchContainer from '../Containers/RenamePouchContainer';
-import Item from './Item';
+import React from "react";
+import { Draggable, Droppable } from "react-drag-and-drop";
+import { Container, Col } from "reactstrap";
+import AddPouchContainer from "../Containers/AddPouchContainer";
+import DeleteItemContainer from "../Containers/DeleteItemContainer";
+import DeletePouchContainer from "../Containers/DeletePouchContainer";
+import AddItemContainer from "../Containers/AddItemContainer";
+import RenamePouchContainer from "../Containers/RenamePouchContainer";
+import Item from "./Item";
 
 const DragDrop = props => {
-  const {
-    pouches,
-    currentItems,
-    currentPouch,
-    setCurrentPouch,
-    getUser,
-    onDragLeave,
-    onDrop,
-    onDragEnd
-  } = props;
+  const { currentPouch, getUser } = props;
   let draggableItems = props.currentItems.map(item => {
     return (
       <Draggable
         type="item"
         data={JSON.stringify(item)}
         itemid={item._id}
-        onDragEnd={e => {
-          props.onDragEnd(item._id, currentPouch._id, getUser._id);
-        }}
+        // onDragEnd={e => {
+        //   props.onDragEnd(item._id, currentPouch._id, getUser._id);
+        // }}
       >
         <div className="item-box">
-          <a href={item.link}>
-            <h3>{item.name}</h3>
-          </a>
           <Item item={item} />
-
           <div>
             <DeleteItemContainer itemid={item._id} />
           </div>
@@ -49,16 +36,16 @@ const DragDrop = props => {
   let droppableItems = props.pouches.map(pouch => {
     return (
       <Droppable
-        types={['item']} // <= allowed drop types
+        types={["item"]} // <= allowed drop types
         onDrop={data => {
-          console.log('Dropped data:', data.item);
+          console.log("Dropped data:", data.item);
           data = JSON.parse(data.item);
-          props.onDrop(data, pouch._id);
+          props.onDrop(data, pouch._id, props.currentPouch._id);
         }} //{props.onDrop.bind(this)}
         //onDrop={() => onDrop()}
         key={pouch._id}
         onClick={() => {
-          console.log('Droppable makes triggers onClick!!!');
+          console.log("Droppable makes triggers onClick!!!");
           props.setCurrentPouch(pouch._id);
         }}
       >
@@ -69,12 +56,12 @@ const DragDrop = props => {
     );
   });
   return (
-    <div>
+    <div class="top-padding">
       <div id="pouch-side-bar">
         <p id="pouch-side-bar-title">Your Pouches</p>
         <div>
-          {droppableItems}
           <AddPouchContainer />
+          {droppableItems}
         </div>
       </div>
       <div className="current-pouch-container">
@@ -86,14 +73,17 @@ const DragDrop = props => {
               ) : null}
               <div className="edit-buttons">
                 <RenamePouchContainer />
-                <DeletePouchContainer />
+                {props.currentPouch &&
+                props.currentPouch.name !== "Unsorted Items" ? (
+                  <DeletePouchContainer />
+                ) : null}
+                <AddItemContainer />
               </div>
               {props.currentItems.length > 0 ? (
                 <div>{draggableItems}</div>
               ) : (
                 <div>No Items in this Pouch</div>
               )}
-              <AddItemContainer />
             </div>
           </Col>
         </Container>

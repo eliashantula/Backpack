@@ -1,4 +1,5 @@
 import { setCurrentPouch } from './pouchActions';
+var querystring = require('querystring');
 
 export const GET_USER_POUCHES_REQUEST = 'GET_USER_POUCHES_REQUEST';
 export const GET_USER_POUCHES_SUCCESS = 'GET_USER_POUCHES_SUCCESS';
@@ -12,6 +13,14 @@ export const REGISTER_REQUEST = 'REGISTER_REQUEST';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAILURE = 'REGISTER_FAILURE';
 
+export const UPDATE_REQUEST = 'UPDATE_REQUEST';
+export const UPDATE_SUCCESS = 'UPDATE_SUCCESS';
+export const UPDATE_FAILURE = 'UPDATE_FAILURE';
+
+export const UPDATE__PASSWORD_REQUEST = 'UPDATE_PASSWORD_REQUEST';
+export const UPDATE_PASSWORD_SUCCESS = 'UPDATE_PASSWORD_ SUCCESS';
+export const UPDATE_PASSWORD_FAILURE = 'UPDATE_PASSWORD_FAILURE';
+
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
@@ -24,10 +33,12 @@ export const USER_DELETE_REQUEST = 'USER_DELETE_REQUEST';
 export const USER_DELETE_SUCCESS = 'USER_DELETE_SUCCESS';
 export const USER_DELETE_FAILURE = 'USER_DELETE_FAILURE';
 
+export const CLEAR_ERROR = "CLEAR_ERROR";
+
 let server =
   process.env.NODE_ENV === 'production'
-    ? 'https://appbackpack.herokuapp.com/'
-    : 'http://localhost:3001';
+    ? 'https://appbackpack.herokuapp.com'
+    : 'http://localhost:3000';
 
 export function getUserPouchesSuccess(data) {
   return {
@@ -65,7 +76,7 @@ export function getUserPouches(user) {
       })
       .then(json => {
         dispatch(getUserPouchesSuccess(json));
-        dispatch(setCurrentPouch({ _id: json[0]._id }));
+        dispatch(setCurrentPouch({ _id: json[json.length - 1]._id }));
       })
       .catch(error => {
         dispatch(getUserPouchesFailure(error));
@@ -125,6 +136,7 @@ export function login(user) {
     return fetch(`${server}/login`, requestOptions)
       .then(response => {
         if (!response.ok) {
+          console.log(response.statusText);
           return Promise.reject(response.statusText);
         }
         return response.json();
@@ -132,7 +144,7 @@ export function login(user) {
       .then(user => {
         dispatch(getUserPouches(user));
         dispatch(loginSuccess(user));
-        //dispatch(setCurrentPouch(user.pouches[0]));
+        dispatch(setCurrentPouch({ _id: user.pouches[0] }));
       })
       .catch(e => {
         dispatch(loginFailure(e));
@@ -144,18 +156,21 @@ export function facebookLogin(data) {
   console.log(data);
   return dispatch => {
     const requestOptions = {
-      credentials: 'same-origin',
-      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      mode: 'cors',
-      body: JSON.stringify(data)
+      credentials: 'same-origin',
+      mode: 'cors'
     };
-    console.log(requestOptions);
 
-    return fetch(`${server}/login/facebook`, requestOptions)
+    return fetch(
+      `${server}/login/facebook?${querystring.stringify({
+        access_token: data.accessToken
+      })}`,
+      requestOptions
+    )
       .then(response => {
+        console.log(response);
         if (!response.ok) {
           return Promise.reject(response.statusText);
         }
@@ -164,7 +179,6 @@ export function facebookLogin(data) {
       .then(user => {
         dispatch(getUserPouches(user));
         dispatch(loginSuccess(user));
-        //dispatch(setCurrentPouch(user.pouches[0]));
       })
       .catch(e => {
         dispatch(loginFailure(e));
@@ -176,17 +190,20 @@ export function googleLogin(data) {
   console.log(data);
   return dispatch => {
     const requestOptions = {
-      credentials: 'same-origin',
-      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      mode: 'cors',
-      body: JSON.stringify(data)
+      credentials: 'same-origin',
+      mode: 'cors'
     };
     console.log(requestOptions);
 
-    return fetch(`${server}/login/google`, requestOptions)
+    return fetch(
+      `${server}/login/google?${querystring.stringify({
+        access_token: data.accessToken
+      })}`,
+      requestOptions
+    )
       .then(response => {
         if (!response.ok) {
           return Promise.reject(response.statusText);
@@ -196,7 +213,6 @@ export function googleLogin(data) {
       .then(user => {
         dispatch(getUserPouches(user));
         dispatch(loginSuccess(user));
-        //dispatch(setCurrentPouch(user.pouches[0]));
       })
       .catch(e => {
         dispatch(loginFailure(e));
@@ -205,7 +221,10 @@ export function googleLogin(data) {
 }
 
 export function loginFailure(err) {
-  return { type: LOGIN_FAILURE, err };
+  return {
+    type: LOGIN_FAILURE,
+    err
+  };
 }
 
 export function loginSuccess(data) {
@@ -275,19 +294,21 @@ export function userDeleteFailure() {
 export function deleteUser(data) {
   return dispatch => {
     dispatch(userDeleteRequest());
-
     fetch(`${server}/users/${data._id}`, {
       method: 'DELETE',
       mode: 'cors',
-      credentials: 'same-origin'
+      credentials: 'same-origin',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
     })
       .then(response => {
         if (!response.ok) {
           throw new Error(`${response.status} ${response.statusText}`);
         }
-
         dispatch(userDeleteSuccess());
-        dispatch(logout());
       })
       .catch(error => {
         dispatch(userDeleteFailure(error));
@@ -317,7 +338,7 @@ export function registerRequest() {
 
 export function registerUser(data) {
   return dispatch => {
-    let { username, email, password } = data;
+    let { username, password } = data;
     dispatch(registerRequest());
 
     fetch(`${server}/register`, {
@@ -327,18 +348,121 @@ export function registerUser(data) {
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then(response => {
+      .then(async response => {
+        let json = await response.json();
+        console.log(json);
+        if (json.error) {
+          throw new Error(`${json.error.message}`);
+        }
         if (!response.ok) {
           throw new Error(`${response.status} ${response.statusText}`);
         }
 
-        return response.json();
+
+        return json;
       })
       .then(json => {
         dispatch(login({ username, password }));
       })
       .catch(error => {
+        console.log(error);
         dispatch(registerFailure(error));
       });
+  };
+}
+
+export function updateSuccess(data) {
+  return {
+    type: UPDATE_SUCCESS,
+    data
+  };
+}
+
+export function updateFailure(error) {
+  return {
+    type: UPDATE_FAILURE,
+    error
+  };
+}
+
+export function updateRequest() {
+  return {
+    type: UPDATE_REQUEST
+  };
+}
+
+export function updateUser(data) {
+  return dispatch => {
+    dispatch(updateRequest());
+    fetch(`${server}/users/${data._id}`, {
+      method: 'PUT',
+      mode: 'cors',
+      credentials: 'same-origin',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        dispatch(updateSuccess(data));
+      })
+      .catch(error => {
+        dispatch(updateFailure(error));
+      });
+  };
+}
+
+export function updatePasswordSuccess(data) {
+  return {
+    type: UPDATE_PASSWORD_SUCCESS,
+    data
+  };
+}
+
+export function updatePasswordFailure(error) {
+  return {
+    type: UPDATE_PASSWORD_FAILURE,
+    error
+  };
+}
+
+export function updatePasswordRequest() {
+  return {
+    type: UPDATE__PASSWORD_REQUEST
+  };
+}
+
+export function updatePassword(data) {
+  return dispatch => {
+    dispatch(updateRequest());
+    fetch(`${server}/users/${data._id}/password`, {
+      method: 'PUT',
+      mode: 'cors',
+      credentials: 'same-origin',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        dispatch(updateSuccess(data));
+      })
+      .catch(error => {
+        dispatch(updateFailure(error));
+      });
+  };
+}
+
+export function clearError() {
+  return {
+    type: CLEAR_ERROR
   };
 }

@@ -8,11 +8,18 @@ import { getUser } from "../actions/userActions";
 class DragDropContainer extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      dataDelete: null
+    };
   }
 
   // onDrop = data => {
   //   console.log(data);
   // };
+
+  onDragData(data) {
+    this.setState("dataDelete", data);
+  }
 
   render() {
     return (
@@ -48,14 +55,15 @@ const mapDispatchToProps = dispatch => {
     getUser: () => {
       dispatch(getUser());
     },
-    onDrop: (data, pouchId) => {
-      //console.log("Dropped Item:", data, pouchId);
+
+    onDrop: (data, pouchId, oldPouchId) => {
+      //{ id, pouchId, ownerId } = data;
       data.pouchId = pouchId;
+      let id = data._id;
+      delete data._id;
+
       dispatch(newItem(data));
-    },
-    onDragEnd: (id, pouchId, ownerId) => {
-      let data = { id, pouchId, ownerId };
-      console.log("Dragged Item:", data);
+      data = { id: id, pouchId: oldPouchId, ownerId: data.ownerId };
       dispatch(deleteItem(data));
     }
   };

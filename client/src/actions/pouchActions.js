@@ -22,8 +22,8 @@ export const DELETE_POUCH_FAILURE = 'DELETE_POUCH_FAILURE';
 
 let server =
   process.env.NODE_ENV === 'production'
-    ? 'https://appbackpack.herokuapp.com/'
-    : 'http://localhost:3001';
+    ? 'https://appbackpack.herokuapp.com'
+    : 'http://localhost:3000';
 
 export function getPouchSuccess(data) {
   return {
@@ -91,6 +91,7 @@ export function newPouch(data) {
       .then(json => {
         dispatch(newPouchSuccess(json));
         dispatch(getUserPouches({ _id: json.ownerId }));
+        dispatch(setCurrentPouch({ _id: json._id }));
       })
       .catch(error => {
         dispatch(newPouchFailure(error));
@@ -163,8 +164,10 @@ export function updatePouch(data) {
       })
       .then(json => {
         dispatch(updatePouchSuccess(json));
-        dispatch(getUserPouches());
-        dispatch(setCurrentPouch({ pouchId: json._id }));
+        dispatch(getUserPouches({ _id: json.ownerId }));
+      })
+      .then(json => {
+        dispatch(setCurrentPouch({ _id: json._id }));
       })
       .catch(error => {
         dispatch(updatePouchFailure(error));

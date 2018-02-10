@@ -3,12 +3,10 @@ import {
   Button,
   Modal,
   ModalHeader,
-  ModalBody,
   ModalFooter,
   Label,
   FormGroup,
-  Form,
-  Input
+  Form
 } from "reactstrap";
 
 class AddPouch extends React.Component {
@@ -17,23 +15,23 @@ class AddPouch extends React.Component {
     this.state = {
       modal: false
     };
-    this.toggle = this.toggle.bind(this);
   }
 
-  submit() {
-    this.toggle;
-  }
-
-  toggle() {
+  toggle = () => {
     this.setState({
       modal: !this.state.modal
     });
-  }
+  };
 
   render() {
     return (
       <div>
-        <Button color="info" size="lg" onClick={this.toggle}>
+        <Button
+          color="info"
+          size="lg"
+          className="button-font"
+          onClick={this.toggle}
+        >
           New Pouch
         </Button>
 
@@ -46,11 +44,12 @@ class AddPouch extends React.Component {
           <Form>
             <FormGroup className="extra-padding">
               <Label for="title">Name:</Label>
+              <br />
               <input
                 type="text"
                 name="name"
                 id="name"
-                placeholder="enter your new pouch name here"
+                size="50"
                 ref={input => {
                   this.name = input;
                 }}
@@ -60,6 +59,7 @@ class AddPouch extends React.Component {
           <ModalFooter>
             <Button
               color="success"
+              className="button-font"
               onClick={() => {
                 this.toggle();
                 this.props.newPouch({
@@ -70,7 +70,11 @@ class AddPouch extends React.Component {
             >
               Create Pouch
             </Button>{" "}
-            <Button color="secondary" onClick={this.toggle}>
+            <Button
+              color="secondary"
+              className="button-font"
+              onClick={this.toggle}
+            >
               Cancel
             </Button>
           </ModalFooter>

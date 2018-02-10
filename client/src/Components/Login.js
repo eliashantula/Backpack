@@ -46,7 +46,7 @@ const Login = ({
         <FormGroup color={getColorFromError(errors.password)}>
           <Label for="password">Password: </Label>
           <Input
-            type="text"
+            type="password"
             name="password"
             value={password}
             id="password"
@@ -58,10 +58,10 @@ const Login = ({
         </FormGroup>
       </Form>
       <ModalFooter>
-        <Button color="success" onClick={onSubmit}>
+        <Button color="success" className="button-font" onClick={onSubmit}>
           Login
         </Button>{" "}
-        <Button color="secondary" onClick={toggle}>
+        <Button color="secondary" className="button-font" onClick={toggle}>
           Cancel
         </Button>
       </ModalFooter>

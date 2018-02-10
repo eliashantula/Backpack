@@ -12,22 +12,19 @@ class Learn extends PureComponent {
       modalSignUp: false,
       modalLogin: false
     };
-
-    this.toggleLogin = this.toggleLogin.bind(this);
-    this.toggleSignUp = this.toggleSignUp.bind(this);
   }
 
-  toggleLogin() {
+  toggleLogin = () => {
     this.setState({
       modalLogin: !this.state.modalLogin
     });
-  }
+  };
 
-  toggleSignUp() {
+  toggleSignUp = () => {
     this.setState({
       modalSignUp: !this.state.modalSignUp
     });
-  }
+  };
 
   render() {
     return (
@@ -97,7 +94,7 @@ class Learn extends PureComponent {
                       color="primary"
                       size="lg"
                       onClick={this.toggleSignUp}
-                      className="button-font-right button"
+                      className="button-font-right button button-font"
                     >
                       Sign Up
                     </Button>
@@ -110,7 +107,7 @@ class Learn extends PureComponent {
                       color="success"
                       size="lg"
                       onClick={this.toggleLogin}
-                      className="button-font-left button"
+                      className="button-font-left button button-font"
                     >
                       Log In
                     </Button>

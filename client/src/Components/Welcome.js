@@ -1,15 +1,12 @@
 import React, { PureComponent } from "react";
 
 import Header from "./Header";
-import {
-  LoginContainer,
-  SignUpContainer,
-  LogoutContainer
-} from "../Containers";
+import { LoginContainer, SignUpContainer } from "../Containers";
 import { Button, Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import FacebookContainer from "../Containers/FacebookContainer";
 import GoogleContainer from "../Containers/GoogleContainer";
+import UserBar from "./UserBar";
 
 class Welcome extends PureComponent {
   constructor(props) {
@@ -18,32 +15,35 @@ class Welcome extends PureComponent {
       modalSignUp: false,
       modalLogin: false
     };
-
-    this.toggleLogin = this.toggleLogin.bind(this);
-    this.toggleSignUp = this.toggleSignUp.bind(this);
-    //this.create = this.create.bind(this);
   }
 
-  toggleLogin() {
+  toggleLogin = () => {
     this.setState({
       modalLogin: !this.state.modalLogin
     });
-  }
+  };
 
-  toggleSignUp() {
+  toggleSignUp = () => {
     this.setState({
       modalSignUp: !this.state.modalSignUp
     });
-  }
+  };
 
-  // create() {
-  //   this.props.createBoard(this.props.user);
-  //   this.setState({
-  //     modal: !this.state.modal
-  //   });
+  errCatcher = err => {
+    alert(err);
+    this.props.clearError();
+  };
+
   render() {
+    let userWelcome = this.props.user ? (
+      <UserBar username={this.props.user.username} />
+    ) : null;
     return (
       <div className="App">
+        {userWelcome}
+
+        <p>{this.props.error ? this.errCatcher(this.props.error) : null}</p>
+
         <Header />
         <Container>
           <Row>
@@ -60,7 +60,7 @@ class Welcome extends PureComponent {
                       color="primary"
                       size="lg"
                       onClick={this.toggleSignUp}
-                      className="button"
+                      className="button button-font"
                     >
                       Sign Up
                     </Button>{" "}
@@ -69,7 +69,7 @@ class Welcome extends PureComponent {
                       color="success"
                       size="lg"
                       onClick={this.toggleLogin}
-                      className="button"
+                      className="button button-font"
                     >
                       Log In
                     </Button>
@@ -77,7 +77,10 @@ class Welcome extends PureComponent {
                 </Row>
                 <Row>
                   <Col xs="12">
-                    <Link className="btn btn-info btn-lg" to="/learn">
+                    <Link
+                      className="btn btn-info btn-lg learn-button button-font"
+                      to="/learn"
+                    >
                       Learn More
                     </Link>
                   </Col>
@@ -85,9 +88,17 @@ class Welcome extends PureComponent {
               </div>
             </Col>
           </Row>
+          <Row>
+            <Col xs="12">
+              <FacebookContainer />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs="12">
+              <GoogleContainer />
+            </Col>
+          </Row>
         </Container>
-        <FacebookContainer />
-        <GoogleContainer />
         <LoginContainer
           isOpen={this.state.modalLogin}
           toggle={this.toggleLogin}
